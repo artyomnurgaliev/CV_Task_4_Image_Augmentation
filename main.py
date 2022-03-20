@@ -129,7 +129,7 @@ def generate_variant(n, filename, angle_0=15, angle_1=4, x=1.0, y=0.1, angle_2=-
 
 
 def main():
-    for i in range(1, 10):
+    for i in range(1, 11):
         generate_variant(0, i, angle_0=15, angle_1=4, x=1.0, y=0.1, angle_2=-1,
                          translate_z=-2,
                          scale1=1.3, scale2=1.3)
