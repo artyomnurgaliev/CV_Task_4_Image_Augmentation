@@ -141,10 +141,10 @@ def generate_variant(n, filename, angle_0=15, angle_1=4, x=1.0, y=0.1, angle_2=-
     img = cv2.cvtColor(np.frombuffer(pixels,
                                      dtype=np.uint8).reshape(w, h, 3), cv2.COLOR_RGB2BGR)
 
-    img = blur(img, shape=(6, 6))
+    img = blur(img, shape=(4, 4))
     img = gaussian_noise(img)
     img = blur(img, shape=(3, 3))
-    cv2.imwrite(f"{filename}_result_{n}.png", img)
+    cv2.imwrite(f"results/{filename}_result_{n}.png", img)
 
 
 def main():
