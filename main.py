@@ -3,12 +3,12 @@ Minimal texture on sphere demo
 This is demo for showing how to put image
 on sphere as texture in PyOpenGL.
 """
-import pygame
-from pygame.locals import *
-from OpenGL.GLUT import *
-from OpenGL.GLU import *
-from OpenGL.GL import *
 import cv2
+import pygame
+from OpenGL.GL import *
+from OpenGL.GLU import *
+from OpenGL.GLUT import *
+from skimage.util import random_noise
 import numpy as np
 
 
@@ -41,6 +41,22 @@ def read_texture(filename):
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.get_width(), image.get_height(), 0,
                  GL_RGBA, GL_UNSIGNED_BYTE, img)
     return texture_id
+
+
+def blur(img, shape=(6, 6)):
+    return cv2.blur(img, shape)
+
+
+def gaussian_noise(img):
+    noise_img = random_noise(img, mode='gaussian', var=0.001)
+    noise_img = (255 * noise_img).astype(np.uint8)
+    return noise_img
+
+
+def pepper_noise(img):
+    noise_img = random_noise(img, mode='pepper')
+    noise_img = (255 * noise_img).astype(np.uint8)
+    return noise_img
 
 
 def generate_variant(n, filename, angle_0=15, angle_1=4, x=1.0, y=0.1, angle_2=-1., translate_z=-2., scale1=1.3, scale2=1.3):
@@ -124,8 +140,11 @@ def generate_variant(n, filename, angle_0=15, angle_1=4, x=1.0, y=0.1, angle_2=-
 
     img = cv2.cvtColor(np.frombuffer(pixels,
                                      dtype=np.uint8).reshape(w, h, 3), cv2.COLOR_RGB2BGR)
-    blur = cv2.blur(img, (6, 6))
-    cv2.imwrite(f"{filename}_result_{n}.png", blur)
+
+    img = blur(img, shape=(6, 6))
+    img = gaussian_noise(img)
+    img = blur(img, shape=(3, 3))
+    cv2.imwrite(f"{filename}_result_{n}.png", img)
 
 
 def main():
